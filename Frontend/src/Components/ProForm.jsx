@@ -28,21 +28,37 @@ const ProForm = () => {
   }, [id]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (id) {
-        await api.put(`/products/${id}`, { name, price, quantity });
-        alert("Product updated successfully!");
-      } else {
-        await api.post("/products", { name, price, quantity });
-        alert("Product added successfully!");
-      }
-      navigate("/");
-    } catch (err) {
-      console.error("Error saving product:", err);
-      alert("Failed to save product.");
+  e.preventDefault();
+
+  
+  console.log("Payload:", { name, price, quantity });
+
+  try {
+    if (id) {
+      await api.put(`/products/${id}`, {
+        name,
+        price: Number(price), 
+        quantity: Number(quantity),
+      });
+      alert("Product updated successfully!");
+    } else {
+      await api.post("/products", {
+        name,
+        price: Number(price), 
+        quantity: Number(quantity),
+      });
+      alert("Product added successfully!");
     }
-  };
+    navigate("/");
+  } catch (err) {
+    console.error("Error saving product:", err);
+    alert(
+      `Failed to save product. ${
+        err.response?.data?.error || "Please check the input values."
+      }`
+    );
+  }
+};
 
   return (
     <div className="container mx-auto p-4">
